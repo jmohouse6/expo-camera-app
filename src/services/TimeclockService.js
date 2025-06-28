@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, differenceInHours, parseISO } from 'date-fns';
+import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, parseISO } from 'date-fns';
 
 export class TimeclockService {
   static async getTodayStatus() {
@@ -127,7 +127,7 @@ export class TimeclockService {
           break;
         case 'clock_out':
           if (clockInTime) {
-            const hoursWorked = differenceInHours(parseISO(entry.timestamp), clockInTime);
+            const hoursWorked = (parseISO(entry.timestamp) - clockInTime) / (1000 * 60 * 60);
             totalHours += hoursWorked;
             clockInTime = null;
           }
@@ -137,7 +137,7 @@ export class TimeclockService {
           break;
         case 'lunch_in':
           if (lunchOutTime) {
-            const lunchHours = differenceInHours(parseISO(entry.timestamp), lunchOutTime);
+            const lunchHours = (parseISO(entry.timestamp) - lunchOutTime) / (1000 * 60 * 60);
             totalHours -= lunchHours; // Subtract lunch time
             lunchOutTime = null;
           }
@@ -147,13 +147,13 @@ export class TimeclockService {
 
     // If still clocked in, calculate hours up to now
     if (clockInTime) {
-      const hoursWorked = differenceInHours(new Date(), clockInTime);
+      const hoursWorked = (new Date() - clockInTime) / (1000 * 60 * 60);
       totalHours += hoursWorked;
     }
 
     // If on lunch break, subtract lunch time up to now
     if (lunchOutTime) {
-      const lunchHours = differenceInHours(new Date(), lunchOutTime);
+      const lunchHours = (new Date() - lunchOutTime) / (1000 * 60 * 60);
       totalHours -= lunchHours;
     }
 

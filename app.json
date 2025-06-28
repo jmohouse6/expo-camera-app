@@ -46,6 +46,12 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to automatically detect job sites."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you take timeclock verification photos."
+        }
       ]
     ]
   }

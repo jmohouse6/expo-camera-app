@@ -22,7 +22,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // Tab Navigator for main app
-function MainTabNavigator() {
+function MainTabNavigator({ userRole, onLogout }) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -51,14 +51,16 @@ function MainTabNavigator() {
       <Tab.Screen name="Timeclock" component={TimeclockScreen} />
       <Tab.Screen name="Jobs" component={JobSelectionScreen} />
       <Tab.Screen name="History" component={TimecardHistoryScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen 
-        name="Supervisor" 
-        component={SupervisorDashboard}
-        options={{
-          tabBarStyle: { display: 'none' } // Hide for non-supervisors
-        }}
+        name="Profile" 
+        children={() => <ProfileScreen onLogout={onLogout} />}
       />
+      {(userRole === 'supervisor' || userRole === 'admin') && (
+        <Tab.Screen 
+          name="Supervisor" 
+          component={SupervisorDashboard}
+        />
+      )}
     </Tab.Navigator>
   );
 }
